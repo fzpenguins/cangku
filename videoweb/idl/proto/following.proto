@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/following";
+
+import "api.proto";
+import "common.proto";
+
+message FollowingListReq{
+  string Uid = 1[(api.query)="uid"];
+  optional int64 PageSize = 2[(api.query)="page_size"];
+  optional int64 PageNum = 3[(api.query)="page_num"];
+}
+
+message ToUserInfoResponse{
+  string Uid = 1[(api.body)="uid"];
+  string Username = 2[(api.body)="username"];
+  string AvatarUrl = 3[(api.body)="avatar_url"];
+}
+
+message UserDataResponse{
+  repeated ToUserInfoResponse Items = 1[(api.body)="items"];
+  int64 Total = 2[(api.body)="total"];
+}
+
+message UserInfoResponse{
+  BaseResponse Base = 1[(api.body)="base"];
+  UserDataResponse Data = 2[(api.body)="data"];
+}
+
+service Following{
+  rpc List(FollowingListReq) returns (UserInfoResponse){
+    option (api.get) = "/following/list";
+  }
+}
+

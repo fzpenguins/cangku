@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/relation";
+
+import "api.proto";
+import "common.proto";
+
+message RelationActionReq{
+  string ToUid = 1[(api.body) = "to_uid"];
+  int64 ActionType = 2[(api.body)="action_type"];
+}
+
+service Relation{
+  rpc Action(RelationActionReq) returns(BaseResponse){
+    option (api.post) = "/relation/action";
+  }
+}

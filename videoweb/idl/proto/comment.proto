@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/comment";
+
+import "api.proto";
+import "common.proto";
+message CommentPublishReq{
+  optional string Vid = 1[(api.body)="vid"];
+  optional string Cid = 2[(api.body)="cid"];
+  string Content = 3[(api.body)="content"];
+}
+
+message CommentListReq{
+  optional string Vid = 1[(api.query)="vid"];
+  optional string Cid = 2[(api.query)="cid"];
+  optional int64 PageSize = 3[(api.query)="page_size"];
+  optional int64 PageNum = 4[(api.query)="page_num"];
+}
+
+message CommentDeleteReq{
+  optional string Vid = 1[(api.body)="vid"];
+  optional string Cid = 2[(api.body)="cid"];
+}
+
+message CommentItems{
+  string Uid = 1[(api.body)="uid"];
+  string Vid = 2[(api.body)="vid"];
+  string Cid = 3[(api.body)="cid"];
+  string ParentId = 4[(api.body)="parent_id"];
+  int64 LikeCount = 5[(api.body)="like_count"];
+  int64 ChildCount = 6[(api.body)="child_count"];
+  string Content = 7[(api.body)="content"];
+  string CreatedAt = 10[(api.body)="created_at"];
+  string UpdatedAt = 11[(api.body)="updated_at"];
+  string DeletedAt = 12[(api.body)="deleted_at"];
+
+}
+
+message CommentResponse{
+  BaseResponse  Base = 1[(api.body)="base"];
+  repeated CommentItems Items = 2[(api.body)="items"];
+}
+
+service Comment{
+  rpc Publish(CommentPublishReq) returns (BaseResponse){
+    option (api.post) = "/comment/publish";
+  }
+
+  rpc List(CommentListReq) returns (CommentResponse){
+    option (api.get) = "/comment/list";
+  }
+
+  rpc Delete(CommentDeleteReq) returns (BaseResponse){
+    option (api.delete) = "/comment/delete";
+  }
+}

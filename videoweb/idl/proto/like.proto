@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/like";
+
+import "api.proto";
+import "video.proto";
+import "common.proto";
+
+message ActionReq{
+  optional string Vid = 1[(api.body)="vid"];
+  optional string Cid = 2[(api.body)="cid"];
+  optional string ActionType = 3[(api.body)="action_type"];
+}
+
+message ListReq{
+  optional string Uid = 1[(api.query)="uid"];
+  optional int64 PageSize = 2[(api.query)="page_size"];
+  optional int64  PageNum = 3[(api.query)="page_num"];
+}
+
+service Like{
+  rpc Action(ActionReq) returns(BaseResponse){
+    option (api.post) = "/like/action";
+  }
+
+  rpc List(ListReq) returns(VideoResponse){
+    option (api.get) = "/like/list";
+  }
+}

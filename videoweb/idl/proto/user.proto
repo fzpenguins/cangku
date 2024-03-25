@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/user";
+
+import "api.proto";
+import "common.proto";
+
+message DataResponse{
+  string Uid = 1[(api.body) = "uid"];
+  string Username = 2[(api.body) = "username"];
+  string AvatarUrl = 3[(api.body) = "avatar_url"];
+  string CreatedAt = 4[(api.body) = "created_at"];
+  string UpdatedAt = 5[(api.body) = "updated_at"];
+  string DeletedAt = 6[(api.body) = "deleted_at"];
+}
+
+message UserRegisterReq{
+//  string Demo = 1[(api.query) = "demo",(api.path) = "demo"];
+//  string GoTag = 2[(api.go_tag) = "goTag:\"tag\""];
+//  string Vd = 3[(api.vd) = "$!='your string'"];
+   string Username = 1[(api.body) = "username"];
+   string Password = 2[(api.body) = "password"];
+
+}
+
+message UserLoginReq{
+    string Username = 1[(api.body) = "username"];
+    string Password = 2[(api.body) = "password"];
+}
+
+message UserInfoReq{
+  optional  string Uid = 1[(api.query) = "uid"];
+}
+
+message UserUploadReq{
+  optional  string AvatarUrl = 1[(api.body) = "avatar_url"];
+}
+
+message UserMFAReq{
+
+}
+
+message UserBindMFAReq{
+  optional string Code = 1[(api.body) = "code"];
+  optional string Secret = 2[(api.body) = "secret"];
+}
+
+message GoodResponse{
+  BaseResponse Base = 1[(api.body) = "base"];
+}
+
+message GoodUserResponse{
+  BaseResponse Base = 1[(api.body) = "base"];
+  DataResponse Data = 2[(api.body) = "data"];
+}
+
+message MFAData{
+  string Secret = 1[(api.body) = "secret"];
+  string Qrcode = 2[(api.body) = "qrcode"];
+}
+
+message GoodMFAResponse{
+  BaseResponse Base = 1[(api.body) = "base"];
+  MFAData Data = 2[(api.body) = "data"];
+}
+
+service User{
+  rpc Register(UserRegisterReq) returns(GoodResponse){
+    option (api.post) = "/user/register";
+  };
+
+  rpc Login(UserLoginReq) returns(GoodUserResponse){
+    option (api.post) = "/user/login";
+  }
+
+  rpc Info(UserInfoReq) returns(GoodUserResponse){
+    option (api.get) = "/user/info";
+  }
+
+  rpc AvatarUpload(UserUploadReq) returns(GoodUserResponse){
+    option (api.put) = "/user/avatar/upload";
+  }
+
+  rpc MFAGet(UserMFAReq) returns(GoodMFAResponse){
+    option (api.get) = "/auth/mfa/qrcode";
+  }
+
+  rpc MFABind(UserBindMFAReq) returns(GoodResponse){
+    option (api.post) = "/auth/mfa/bind";
+  }
+
+}
+
+

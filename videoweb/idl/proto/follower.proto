@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/follower";
+
+import "api.proto";
+import "following.proto";
+
+service Follower{
+  rpc List(FollowingListReq) returns (UserInfoResponse){
+    option (api.get) = "/follower/list";
+  }
+}

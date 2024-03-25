@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/friends";
+
+import "api.proto";
+import "following.proto";
+
+message FriendsListReq{
+  optional int64 PageNum = 1[(api.query)="page_num"];
+  optional int64 PageSize = 2[(api.query)="page_size"];
+}
+
+service Friends{
+  rpc List(FriendsListReq) returns (UserInfoResponse){
+    option (api.get) = "/friends/list";
+  }
+}

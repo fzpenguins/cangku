@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/video";
+
+import "api.proto";
+import "common.proto";
+
+
+message VideoPublishReq{
+  optional  File data = 1[(api.body)="data"];
+  optional string  Title = 2[(api.body)="title"];
+  optional  string  Description = 3[(api.body)="description"];
+}
+
+message VideoListReq{
+  string Uid = 1[(api.query)="uid"];
+  int64 PageNum = 2[(api.query)="page_num"];
+  int64 PageSize = 3[(api.query)="page_size"];
+}
+
+message VideoPopularReq{
+  optional int64 PageSize = 1[(api.query)="page_size"];
+  optional int64 PageNum = 2[(api.query)="page_num"];
+}
+
+message VideoSearchReq{
+  string Keywords = 1[(api.body)="keywords"];
+  int64 PageSize = 2[(api.body)="page_size"];
+  int64 PageNum = 3[(api.body)="page_num"];
+  optional  int64 FromDate = 4[(api.body)="from_date"];
+  optional  int64 ToDate = 5[(api.body)="to_date"];
+  optional  string Username = 6[(api.body)="username"];
+}
+
+message VideoFeedReq{
+  string LatestTime = 1[(api.query)="latest_time"];
+}
+
+message ItemsResponse{
+  string Vid = 1[(api.body)="vid"];
+  string Uid = 2[(api.body)="uid"];
+  string VideoUrl = 3[(api.body)="video_url"];
+  string CoverUrl = 4[(api.body)="cover_url"];
+  string Title = 5[(api.body)="title"];
+  string Description = 6[(api.body)="description"];
+  int64 VisitCount = 7[(api.body)="visit_count"];
+  int64 LikeCount = 8[(api.body)="like_count"];
+  int64 CommentCount = 9[(api.body)="comment_count"];
+  string CreatedAt = 10[(api.body)="created_at"];
+  string UpdatedAt = 11[(api.body)="updated_at"];
+  string DeletedAt = 12[(api.body)="deleted_at"];
+}
+
+message VideoTotalResponse{
+  BaseResponse Base = 1[(api.body)="base"];
+  repeated  ItemsResponse Items = 2[(api.body)="items"];
+  int64 Total = 3[(api.body)="total"];
+}
+
+message VideoResponse{
+  BaseResponse Base = 1[(api.body)="base"];
+  repeated ItemsResponse Items = 2[(api.body)="items"];
+}
+
+message VideoRankResp{
+  string Vid = 1[(api.body)="vid"];
+  int64 VisitCount = 2[(api.body)="visit_count"];
+}
+
+service Video{
+  rpc Publish(VideoPublishReq) returns (BaseResponse){
+    option (api.post) = "/video/publish";
+  }
+
+  rpc List(VideoListReq) returns(VideoTotalResponse){
+    option (api.get) = "/video/list";
+  }
+
+  rpc Popular(VideoPopularReq) returns(VideoResponse){
+    option (api.get) = "/video/popular";
+  }
+
+  rpc Search(VideoSearchReq) returns(VideoTotalResponse){
+    option (api.post) = "/video/search";
+  }
+
+  rpc Feed(VideoFeedReq) returns(VideoResponse){
+    option (api.get) = "/video/feed";
+  }
+}

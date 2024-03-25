@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "hertz/common";
+
+import "api.proto";
+
+message BaseResponse{
+  int64 Code = 1[(api.body) = "code"];
+  string Msg = 2[(api.body) = "msg"];
+}
+
+message File{
+  string VideoUrl = 1[(api.body) = "video_url"];
+  string CoverUrl = 2[(api.body) = "cover_url"];
+}
+
+service Common{
+
+}
